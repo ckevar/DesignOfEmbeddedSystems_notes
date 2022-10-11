@@ -1,5 +1,7 @@
 # Models
 
+_Link:_
+
 *UML*, *SM* is a software modeling.
 
 **Why models?** Sometimes enviroments make a system difficult to test, either due to enviromental conditions or costs, examples of this are space exploration or nuclear reactors. That's why modeling has two goals, *documenting* and *simulating*.
