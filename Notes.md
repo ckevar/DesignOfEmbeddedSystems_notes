@@ -19,25 +19,18 @@ __Functional modeling__
 
     The system is modeled using models and parameters of the enviroment.
 
-
 __Architecture Exploration__
     Defines the architecture that supports the execution of this functionality, such as (microncontroller architecture, peripherals, where the microncontrollers are gonna be purchased from).
 
     Also it defines the *functionality* over the architecture, where and when the functions will be executed.
 
-
 __Component Modeling__
         Design the component, model the __behaviour inside them__ and then __implement__ (_Code_) the components either harware or software, accordingly.
-
 
 __Validation__
         The user confirms the software functionality.
 
-
-
 V-model_ allows tracing errors at early stage because the test statements and conditions are written at each level of the development.
-
-
 
 ## Models
 
@@ -77,58 +70,65 @@ Requirements are linked directly with _validation_ because that's what the user 
 5. Even when the project is built by small cycles (meaning prototypes) in each cycle the set of requirements has to be set.
 6. Requirments are generated and coordinated by/with marketing staff, productt specialists and other analysts.
 7. Requirements are natural language, therefore, they are unconsistent and misunderstood.
-8. The current problem lays on How to write proper requirements or how to extract them from the users' speech.
-9. It starts with Requirments Elicitation state, where the user or stakeholders tells or is being asked what the requirements are.
+8. The current problem in the industry lays on *How to write* proper requirements or *how to extract* them from the users' speech.
+9. It starts with **Requirments Elicitation state**, where the user or stakeholders tells or is being asked what the requirements are.
 10. _Z_ language is the _formal_ languge to write requirements.
-11. _FSM, ATL_ also can be used to write requirments.
-12. But in reality _FSM_ and _ATL_ are not good to write requirements because they are not general language.
+11. _FSM, ATL_ also can be used to write requirments. But in reality _FSM_ and _ATL_ are not good to write requirements because they are not general language.
 
 ### How to write requirements
 
-1. We can start by enumerating the _working_ modes or _states_ of the system. From airplanes to lifts have states or working modes, so _start_ by breaking down the _working mode_ and work in each _working mode_ and the _information_ the system handles if the system or subsystem is a storage data or retriever data. this obviously wont work for controll based systems.   
-2. then use cases of the system and the actors, humans or operatators and external events in the environment (temperature, pressure).
-3. Write in a style of _FSM_ description.
+1. We can start by enumerating the _working_ modes or _states_ of the system. From airplanes to lifts, they all have states or working modes, so _start_ by breaking down the _working mode_ and work in each _working mode_ and the _information_ the system handles if the system or subsystem is a storage data or retriever data. the last obviously won't work for controll based systems.   
+2. Then take into account cases of the system and the actors, humans or operatators and external events in the environment (temperature, pressure).
+3. Write those working modes in a style of _FSM_ description.
 4. Ease definitions of requirenment-driven test cases, to implement SysML.
 
 ### REQUIREMENT ANALYSIS - CONTROLLER-CONTROLLED MODEL
 
-In embedded system we have two sides, the system what will control and the enviroment that will be controlled. 
-on the _controller side_ we will found _constraits_ of the system, on the _plant side_ we will get something called the _assumptions_.
+In embedded system we have two sides: the system that will control and the enviroment that will be controlled. On the _controller side_ we will found _constraits_ of the system and, on the _plant side_ we will get something called the _assumptions_.
 Each requirement should be written as a pair or a contract, a _constrait_ given and an _assumption_, for example:
     __The controller of the boiler should always make sure that the temperature is between +/-1 away from the desired temperature.__
-This requirement is missing the assumption, it's assumed the _Boiler is full of water, the sensors are working correctly, enough sensors are installed in the region of interest_
-Each requirement has two components, the _assertion_, what the controller must provide based on the _assumption_ of the system. Some _assumptions_ should be part of the requirements and some are _forced_ to be.
+This requirement is missing the *assumption*, it's assumed the _Boiler is full of water, the sensors are working correctly, enough sensors are installed in the region of interest_. Each requirement has two components, the _assertion_, what the controller must provide based on the _assumption_ of the system. Some _assumptions_ should be part of the requirements and some are _forced_ to be.
 
-The structure _assumes_ we have identified a section for our system that is already partioned. 
-For every single macro subsystem, identify the working modes, and then refine those things.  some reactions arent isolated in a single subsystem but organized in a protocol escenario. This reaction is called _sequence_ diagram in _UML_ and _interaction_ diagram on _SysML_.
-So, the requirements will operate in two modes, at system level and subsystem level. 
-_inputs_, _outputs_, _characteristics_ and _parameters_.
+The structure _assumes_ we have identified a section for our system that is already partioned. For every single macro subsystem:
+
+1. Identify the working modes and, 
+
+2. Then refine those things.  
+
+3. Some reactions aren't isolated in a single subsystem but organized in a protocol escenario. This reaction is called _sequence_ diagram in _UML_ and _interaction_ diagram on _SysML_.
+   
+   So, the requirements will operate in two modes, at system level and subsystem level: inputs_, _outputs_, _characteristics_ and _parameters_.
 
 __Itemized requirements__ are more difficult to read but they are more accurate and easy to test or write tests for.
 
 ### Unnecesary description
 
-1. What the system doesnt do
+1. What the system doesn't do
 2. Description of things when the system does not react. If it is a safety requirement, then it's ok, otherwise it's unnecesary.
-3. Don't change or switch back and forth between the working mode' names.
+3. Don't change or switch back and forth between the working mode names.
 4. If a system has multiple things of the same specie then they have to be named in sequency, but there have to be consistent across the whole desription without changing over time or over the whole description.
 
 ## Type of Requirements
 
 The requirements can be 
-__User requirments__
-__Functional requirments__
-        for mechanisms and procedures needed to achieve the user requirements. timing included.
-__Safety requirements__
-        Possible failure conditions and hazards, based on _assumptions_.
+__User requirements__
+
+    What the user expects the system does
+__Functional requirments__    
+
+    For mechanisms and procedures needed to achieve the user requirements. timing included.
+__Safety requirements__    
+
+    Possible failure conditions and hazards, based on _assumptions_.
 __Diagnostic Requirements__
-        on/off-board diagnostics required.
+
+    On/off-board diagnostics required.
 __Para-functional or non-functional Requierements__ 
         Features that can be measured: usability, scalability and speed.
 
 In order to complement the requirements some diagrams are needed that will be mentioned later.
 
-_itemization_ of requirements is important, to clearly identify them and trace them to be tested. 
+_itemization_ of requirements is important, to clearly identify them and trace them when  tested. 
 A formal repository has to be used to store the variables and parameters (including buttons).
 
 __What's a good test?__
@@ -992,6 +992,7 @@ Orange arrows represet the dependency of the blocks, meaning the entry of C is t
 A mechanism is required in order for B to process the all values produced by A, here is when buffer mechanism is deployed. When having multiple readers, one buffer isn't enough, an array of them is needed, popping many different problems. 
 
 - How many values will be stored?
+- 
 
 ## Testing
 
