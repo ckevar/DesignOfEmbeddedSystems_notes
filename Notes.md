@@ -672,7 +672,7 @@ As part of the _ExecutionPlatform_, the followings also have to be added:
 
 # OSEK
 
-it's a Standard for operating system that is popular in the automitve industry. It's different than traditional OS. OSEK is static, meaning, all configuration system needs to be known before hand, number of threads, resources, semaphores and so on. No dynamic creation of objects or forking something or dynamically allocating something else. 
+it's a Standard Operating System that is popular in the automotive industry. It's different than traditional OS. OSEK is static, meaning, all configuration system needs to be known before hand: number of threads, resources, semaphores and so on. No dynamic creation of objects or forking something or dynamically allocating something else. 
 
 Most of automotive system and embedded systems are static. no apps are created during execution, everything is known, and OSEK is attached to this.
 
