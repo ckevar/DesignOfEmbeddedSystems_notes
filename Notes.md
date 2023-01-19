@@ -986,78 +986,98 @@ Let's assume a general system where blocks are not even guarateed to be periodic
 
 ![[Pasted image 20221005175524.png]]
 
-Orange arrows represet the dependency of the blocks, meaning the entry of C is the output of A. But the real implementation turns to be this: 
-![[Pasted image 20221005175730.png]]
+Orange arrows represet the dependency of the blocks, meaning the entry of C is the output of A. But the real implementation turns to be this: ![](/home/ckevar/.config/marktext/images/2022-10-12-15-49-46-image.png)
 
 A mechanism is required in order for B to process the all values produced by A, here is when buffer mechanism is deployed. When having multiple readers, one buffer isn't enough, an array of them is needed, popping many different problems. 
+![](/home/ckevar/.config/marktext/images/2022-10-12-15-50-26-image.png)
 
-- How many values will be stored?
-- 
+- **How many values will be stored?** There are research on going for this kinda questions.
 
-## Testing
+Assume enough positions are present (no worries about buffer size). The mechanism needed is that assigns an index to the writers when a writer is activated and, the same thing to the reader. The Reader will be assined the index of the user that it will use when activated because the value that needs to be consumed is defined at activation time. This index cannot be given in the task code, it has to be done at activation time. That's why it needs the support of the operating system or something that guarantees the execution before any task in the system (highest priority). Once the index is assigned the actual write and read can be performed, obviously when the reader is reading a certain value, that cannot be overwritten, if the writers are producing other values they can be place somewehre else in the buffer. Not all values produced by the writers have to be stored, so at most, there will be one variable for the eache reader and one more value that's available for the writer. So, one safe bow in case the writer is higher priority than all the readers, number of readers + two (buffer size). If the writer is lower priority you need to account the unit delay plus 2. one way to size the buffer is the number of readers + 1. There's another sizing option
 
-_link: https://www.youtube.com/watch?v=jhKd3FJM5Cc&list=PLohWCZQwiEVpgTkxTsgSTnDvlz3OvphkP&index=8_
 
-in the _V cycle_, left wing is refinement and development and right wing is verification and testing and blue lines lines (the horizontal ones the goes from left wing to the right one) are the planned verification and testing.
 
-### Testing
+**Temporal Concurrency Control**
 
-should be a black-box, only known the inputs and the expected outputs accoriding to the requirements.  all requests should be cover (100% coverage).
+This another way to size buffers and based on: 
 
-### Instruction testing
+![](/home/ckevar/.config/marktext/images/2022-10-12-16-52-15-image.png)
 
-is to make sure every single line of code has to be executed at least in one testing.
+The value will receive an index position in the buffer, this index cannot be reuse if it's being used by any one of the readers but when it's guaranteed this position is not used by any reader then it can be reused, so, a lifetime for this position can be computed. 
 
-### Unintended Functionality
+the 
 
-.....
+$lifetime: I_{wr}= O_{wr} + max(R_{ri})$ 
 
-### Functional Testing
+$O_{wr}$ : Offset time between this point in time and activation time of any reader.
 
-A program is seen as functions that has inputs in a range and its respective output.
-Impossible to test all possible inputs.
+$max(R_{ri})$: Worst case time that takes to any reader to complete,
 
-### Nominal testing
+$I_{wr}$: lifetime for this value for anyone of the readers.
 
-For each input a value is selected from the given range, they could be random or significants.
+Check how many values the writers can produce inside a lifetime and that's the buffer size required. This is called circular buffer. Once the writers reach the last element of the buffer, in the next writing, the writer overwrites the first index (o-based indexation).
 
-### Boundary testing
+But this needs support by the OS at activation time, if the writer and the readers are periodic guaranteedly 
 
-Values at the boundary of the range are most likely to produce errors, like a mechanical component and the test cases are: _4n + 1_, where n is number of input variables.
 
-#### Robustness BV testing
 
-sometimes it's better to take values even outside the range, like the Arianne 5 which wasnt supposed to go over a certaing variable. And now the number of test cases are _6n + 1_.
+# Simulink Model
 
-### Worst-case BV testing
+they can be many things: network of blocks, other things to considerate to generate code from a model are:
 
-test cases $5^n$ 
+1. Number of workspace variables, The execution of the model may be conditioned to the value or number of variables.
 
-#### Worst-case + Robust BV testing.
+2. Number of type declarations. Each block is the model is carrying a signal, a funtion in time with values in a given range. They can be premitive types predefined by simulink. Keep in mind that complex types can be used in models, possible variable dimensiones, such as arrays, where each element is a structure. In general, whatever language is being used to develop the system, the capability to create custom data types is desired/required. In simulink, this is called bus objects. This custom types are defined outside the model in a separate enviroment.
 
-test cases $7^n$
+3. Other part of the system's bheaviour might be descriped with matlab code or external code, that might not be in the graphical description. 
 
-### Equivalence Classes
+4. Simulation condiguration pages.
 
-it's a weak test 
+## Simulink semantics and flow preservation
 
-test cases: $\prod_X(\sum_X)$
+The system is a network of functional blocks, for convinience they are labeled as $b_j$. In simulink the blocks can be regular blocks or **dataflow blocks**, these are Stateless (in reality some blocks do have a state). they can be continuous, discrete or triggered.
 
-### Weak Robust EC
+1. *Continues* means the outputs is update and is valid at any point in time in a continuous  time.
 
-test case: $(\max_x|\sum_X|) + 2n$
+2. *Discrete* means it only updates its output at discrete point in time.
 
-### Strong Robust EC
+3. *Triggered*, it's kind of a discrete event.
 
-test case: $\prod_X(|\sum_x| + 2)$
 
-### Combined with BV
 
-text cases: $\prod_x4(|\sum_X| + 1)$
+The other type of blocks are **Stateflow** or state machine blocks, this type of blocks are actually managed by a program that in reality is external, it's kind of a plug-ing of external program. In the new versions of simulink the manage of the stateflow blocks is homogeneous to the other blocks.
 
-# Simulink Intro
+When generating code out of a model, everything becomes a discrete time block. Everything becomes periodically activated. For embedded systems, out of all those blocks, the most importants are the periodic activated ones. The signals are continues but sample periodically and the output will be periodic as well.
 
-_link: https://www.youtube.com/watch?v=-8CaGKwRLzQ&list=PLohWCZQwiEVpgTkxTsgSTnDvlz3OvphkP&index=9_
+
+
+## Simulation Flow
+
+Whenever there's a network of blocks, basically there are two end points, the inicialization stage at the begining and a termination stage at the end.
+
+![](/home/ckevar/.config/marktext/images/2022-10-12-18-03-08-image.png)
+
+Then there is the main simulation cycle that is repeated until the end of the simulation. basically the end of the simulatio is controlled by the user, i.e. _inf_ means the simulation lasts forever.
+
+The model is first compiled before simulation, number of things that have to be done before simulating, as part ot this, each block is assigned with a rate. This is because the user doesnt write explicitly a number for the block's period but it's usually left as inheritance. In this case, the backwards block will dictate the period otherwise, there's a forward search in order to find something that defines a period for the block. Therefore, there's a forward and backwards propagation to assign rate to the blocks. Constant values are also prograpagated at compilation time (to avoid recomputation). As well it initialize the simulation structure, inputs, outputs, states, matrices and variables that are in the system.
+
+Inside the cycle, the next simulatio time is computed specially when there's a variable rate execution, let's step back, there are three types of blocks, continuos, discrete and event.-drive. if everything in the system is discrete, then, the next event in the sysmte is very easy it would be the next activation for any block in the sysmte, and in this case the simulator will do, basically the simulator will compute the base rate, it computes the gratest como divisor among all the periods of all blocks. i.e., if there are two blocks with periods 3 and 10, the the GCM would be 1, meaning the overall period is 1. 
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Simulink - Code Generation and RT blocks
 
@@ -1105,6 +1125,16 @@ The feed through block requieres that the predecessor block provides the input t
 there's no priority in simulink, there's feedthrough or non-feedthrough blocks and this rules the order of execution.
 SOMETHING ELSE
 Another interpretation, it's good to fill the values of the variable beforehand. and if you dont know set as uknown, so the outputs will be unknows, however in the following iteration, the values will be progragated from the beginning block to the last one.
+
+
+
+
+
+
+
+
+
+
 
 ## Semantics and Compositionality
 
