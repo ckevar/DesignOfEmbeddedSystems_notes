@@ -40,4 +40,50 @@ Now, assume some blocks are continuos then, there's an election between performi
 
 Whithin the simulation cycle, for variable rates, the next event has to be computed, after that, all outputs, discrete states and integration with continuous time has to be performed, once done, the simulation cycle restarts.
 
+## Functional Representation: SR Simulink Modeling
+
+For our convinience, they all operate in continuos signals, so, inputs and outputs are continuos functions. Blocks might stateful or stateless, these lead us the fact that continuos-type blocks are defined by a set of diferential equations and discrete-type blocks maybe defined by a set of diferent situation (or event ocurrencies). 
+
+The discrete blocks are the most interesting one, because eventually, at generating code, the model has to be simulated with a fixed-step solver. This fixed step will be the period of uptading the states of the blocks and outputs, even continuos blokcs will be treated as if they were discrete. 
+
+Discrete blocks are activate by periodic events with 0 offset, meaning the blocks dont wait for a fixed amount time after the event was triggered. 
+
+$T_b$ is a base period and it must be a divisor of any other periodic input signal.   
+
+### How does each block behaves?
+
+At each activation event, the bock computes its out update and state update functions:
+
+$S_j^{new},o_j = f(S_j,i_j)$
+
+### State Machines
+
+These are activated periodically, they might, but they usually react to a set of event streams $e_{jv}$. And each event is characterized by a period. Merging Data flow blocks and State flow blocks and all activation events in the system will belong to a discrete time base, for events this is translated as: $kT_{jv}$, where $T_{jv}$ is the activation period of each event $e_{jv}$ times a generic integer $k$.
+
+
+
+**SIMULATION CONFIGURATION**
+
+On the simulink workspace, click on Simulation, Configuration Parameters. 
+
+Some parameters in here are related to the simulation and some, to the code generation.
+
+Under the Solver, the solver's step (fixed-step or variable), the step size and the solver itself. Meaning, even the continuos blocks will be evaluated periodicaly. Once, variable is chosen an additional number of options are released.
+
+1. **Execution Order - Feedthrough**
+   
+   if two blocks $b_i$ and $b_j$ are in an input-output relationship and $b_j$ is of type _feedthrough_, then:
+   
+   $b_i \rarr b_j $, this is a contraint that says $b_i$ has to be executed before $b_j$.
+   
+   in case $b_j$ isn't a feedthrough type, then, the link has a delay:
+   
+   $b_i \rarr ^{-1} b\_j$
+   
+   _What does_ **_feedthrough_** *mean?* 
+   
+   Each block has an activation event, set of inputs, set of outputs, an output update rule based on in the input and the block inner state and an state update rule based on the input and the block inner state. Many blocks have all of these, and some are stateless or state-only blocks (delay or integrators). Not feedthrough referers to blocks whose output does not depend on inputs. meantime for **_feedthrough_** the inputs are required before computing the outputs. 
+
+2. 
+
 
