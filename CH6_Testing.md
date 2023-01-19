@@ -68,7 +68,9 @@ n is the number of regios for i_1 and m is the ranges.
 ### Equivalence classes (Strong)
 
 For this test, one nominal test for subregion is required. so the number of test-cases become the product of subranges times the input variables: 
-\prod_X(\sum_X) this is a quantity that grows fast as well.
+                $\prod_X(\sum_X)$ 
+
+this is a quantity that grows fast as well.
 
 ### Weak Robust EC
 
@@ -76,14 +78,14 @@ It isnt enough with at least one test for input variable but it's needed one tes
 
 ### Strong Robust EC
 
-Beyond the fact that there's one test for each region, it's also required to have a test case below the minimun of each subrange of each input variable. becoming this way \prod_X(|\sum_X| + 2) test-cases.
+Beyond the fact that there's one test for each region, it's also required to have a test case below the minimun of each subrange of each input variable. becoming this way $\prod_X(|\sum_X| + 2)$ test-cases.
 
 ### Combination
 
 All tecniques can be combined such as:
 
 - Robust WCT + Robust EC
-- Strong EC + Robust BV: \prod_X4(|\sum_X|+1) test-cases. but it's too big for an actual real-life program. in a 5 variables with 5 partitions, the number of tests are 8 millions, which can lead to 3 months of testing if 1 sec is spent per test.
+- Strong EC + Robust BV: $\prod_X4(|\sum_X|+1)$ test-cases. but it's too big for an actual real-life program. in a 5 variables with 5 partitions, the number of tests are 8 millions, which can lead to 3 months of testing if 1 sec is spent per test.
 
 ## Structural testing
 

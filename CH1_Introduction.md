@@ -50,4 +50,4 @@ Modern language have Predictable timing or a way to handle timing. Old languages
 
 **Validation** The user confirms the software functionality.
 
-V-model_ allows tracing errors at early stage because the test statements and conditions are written at each level of the development.
+V-model allows tracing errors at early stage because the test statements and conditions are written at each level of the development.
